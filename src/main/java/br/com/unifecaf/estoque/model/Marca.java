@@ -2,13 +2,9 @@ package br.com.unifecaf.estoque.model;
 
 import jakarta.persistence.*;
 
-/**
- * Marca (fabricante) de veiculos. Ex.: Toyota, Volkswagen, Honda.
- */
 @Entity
 @Table(name = "marca")
 public class Marca extends EntidadeBase {
-
     @Column(nullable = false, unique = true, length = 60)
     private String nome;
 
@@ -16,7 +12,6 @@ public class Marca extends EntidadeBase {
     private String paisOrigem;
 
     protected Marca() {
-        // exigido pelo JPA
     }
 
     public Marca(String nome, String paisOrigem) {

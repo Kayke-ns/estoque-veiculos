@@ -11,14 +11,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/modelos")
 public class ModeloController {
-
     private final ModeloService service;
 
     public ModeloController(ModeloService service) {
         this.service = service;
     }
 
-    /** GET /api/modelos ou GET /api/modelos?marcaId=1 */
     @GetMapping
     public List<ModeloDTO.Response> listar(@RequestParam(required = false) Long marcaId) {
         return service.listar(marcaId);

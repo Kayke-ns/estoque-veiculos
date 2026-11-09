@@ -18,13 +18,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Camada de servico: concentra as regras de negocio do estoque.
- * Os controllers nunca falam direto com o repositorio.
- */
 @Service
 public class VeiculoService {
-
     private static final Set<String> CAMPOS_ORDENACAO = Set.of("preco", "anoFabricacao", "quilometragem", "atualizadoEm");
 
     private final VeiculoRepository veiculos;
@@ -68,7 +63,6 @@ public class VeiculoService {
         return VeiculoDTO.Response.de(veiculos.save(v));
     }
 
-    /** PUT: substitui todos os dados do veiculo. */
     @Transactional
     public VeiculoDTO.Response substituir(Long id, VeiculoDTO.Request req) {
         Veiculo v = obter(id);
@@ -88,7 +82,6 @@ public class VeiculoService {
         return VeiculoDTO.Response.de(v);
     }
 
-    /** PATCH: atualiza apenas preco, quilometragem e/ou status. */
     @Transactional
     public VeiculoDTO.Response atualizarParcial(Long id, VeiculoDTO.Atualizacao req) {
         Veiculo v = obter(id);

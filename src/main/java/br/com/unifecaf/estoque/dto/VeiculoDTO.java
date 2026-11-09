@@ -9,11 +9,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public final class VeiculoDTO {
-
     private VeiculoDTO() {
     }
 
-    /** Cadastro completo de um veiculo. */
     public record Request(
             @NotNull(message = "modeloId e obrigatorio") Long modeloId,
             @NotNull(message = "anoFabricacao e obrigatorio") @Min(1950) Integer anoFabricacao,
@@ -25,7 +23,6 @@ public final class VeiculoDTO {
             StatusVeiculo status) {
     }
 
-    /** Atualizacao parcial (PATCH): so preco, quilometragem e status. */
     public record Atualizacao(
             @Positive(message = "preco deve ser positivo") BigDecimal preco,
             @PositiveOrZero Integer quilometragem,
@@ -47,7 +44,6 @@ public final class VeiculoDTO {
             String placa,
             String descricao,
             LocalDateTime atualizadoEm) {
-
         public static Response de(Veiculo v) {
             return new Response(
                     v.getId(),

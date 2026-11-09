@@ -1,4 +1,3 @@
-// Frontend simples que consome a API REST do estoque.
 const API = '/api';
 const $ = (s) => document.querySelector(s);
 const brl = (v) => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -26,7 +25,6 @@ function toast(msg, falha = false) {
   t._timer = setTimeout(() => (t.className = ''), 2800);
 }
 
-// ---------- abas ----------
 document.querySelectorAll('.aba').forEach((b) =>
   b.addEventListener('click', () => {
     document.querySelectorAll('.aba').forEach((x) => x.classList.toggle('ativa', x === b));
@@ -35,7 +33,6 @@ document.querySelectorAll('.aba').forEach((b) =>
   })
 );
 
-// ---------- catalogo ----------
 async function carregarCatalogo() {
   [marcas, modelos] = await Promise.all([api('/marcas'), api('/modelos')]);
   const optMarcas = marcas.map((m) => `<option value="${m.id}">${m.nome}</option>`).join('');
@@ -94,7 +91,6 @@ async function removerModelo(id) {
   catch (err) { toast(err.message, true); }
 }
 
-// ---------- veiculos ----------
 async function carregarResumo() {
   const r = await api('/veiculos/resumo');
   $('#resumo').innerHTML = `

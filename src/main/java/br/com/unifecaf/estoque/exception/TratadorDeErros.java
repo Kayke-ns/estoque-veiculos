@@ -11,12 +11,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Converte excecoes em respostas JSON padronizadas para o cliente da API.
- */
 @RestControllerAdvice
 public class TratadorDeErros {
-
     public record Erro(LocalDateTime timestamp, int status, String erro, List<String> detalhes) {
         static Erro de(HttpStatus s, List<String> detalhes) {
             return new Erro(LocalDateTime.now(), s.value(), s.getReasonPhrase(), detalhes);

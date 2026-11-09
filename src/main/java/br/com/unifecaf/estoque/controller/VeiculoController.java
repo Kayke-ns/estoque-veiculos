@@ -16,17 +16,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/veiculos")
 public class VeiculoController {
-
     private final VeiculoService service;
 
     public VeiculoController(VeiculoService service) {
         this.service = service;
     }
 
-    /**
-     * Consulta com filtros opcionais. Exemplo:
-     * GET /api/veiculos?marcaId=1&status=DISPONIVEL&precoMax=100000&anoMin=2020&ordenarPor=preco&direcao=asc
-     */
     @GetMapping
     public List<VeiculoDTO.Response> consultar(
             @RequestParam(required = false) Long marcaId,

@@ -11,7 +11,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/marcas")
 public class MarcaController {
-
     private final MarcaService service;
 
     public MarcaController(MarcaService service) {

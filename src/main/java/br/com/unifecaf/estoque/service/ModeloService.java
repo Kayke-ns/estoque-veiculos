@@ -14,7 +14,6 @@ import java.util.List;
 
 @Service
 public class ModeloService {
-
     private final ModeloRepository modelos;
     private final VeiculoRepository veiculos;
     private final MarcaService marcaService;

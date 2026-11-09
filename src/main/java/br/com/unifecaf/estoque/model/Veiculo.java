@@ -5,10 +5,6 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.Year;
 
-/**
- * Veiculo do estoque. Concentra as regras de negocio que protegem seus proprios dados
- * (ENCAPSULAMENTO): preco nunca negativo, quilometragem nunca diminui, ano valido.
- */
 @Entity
 @Table(name = "veiculo", indexes = {
         @Index(name = "idx_veiculo_status", columnList = "status"),
@@ -16,7 +12,6 @@ import java.time.Year;
         @Index(name = "idx_veiculo_ano", columnList = "ano_fabricacao")
 })
 public class Veiculo extends EntidadeBase {
-
     public static final int ANO_MINIMO = 1950;
 
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
@@ -61,7 +56,6 @@ public class Veiculo extends EntidadeBase {
         return modelo.getMarca().getNome() + " " + modelo.getNome() + " " + anoFabricacao + " " + cor;
     }
 
-    /** Regra de negocio: marca o veiculo como vendido. */
     public void vender() {
         if (status == StatusVeiculo.VENDIDO) {
             throw new IllegalStateException("Veiculo ja foi vendido");
@@ -72,8 +66,6 @@ public class Veiculo extends EntidadeBase {
     public boolean isDisponivel() {
         return status == StatusVeiculo.DISPONIVEL;
     }
-
-    // ---------- getters e setters com validacao ----------
 
     public Modelo getModelo() {
         return modelo;
@@ -125,7 +117,6 @@ public class Veiculo extends EntidadeBase {
         return quilometragem;
     }
 
-    /** A quilometragem de um veiculo nunca pode voltar para tras. */
     public void setQuilometragem(Integer novaKm) {
         validarKm(novaKm);
         if (this.quilometragem != null && novaKm < this.quilometragem) {

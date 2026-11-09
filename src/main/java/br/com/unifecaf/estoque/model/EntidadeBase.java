@@ -4,16 +4,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-/**
- * Superclasse abstrata de todas as entidades do sistema.
- *
- * HERANCA: Marca, Modelo e Veiculo herdam o identificador e as datas de auditoria.
- * ABSTRACAO: a classe e abstrata, ou seja, nao pode ser instanciada diretamente.
- * ENCAPSULAMENTO: atributos privados, acessados apenas por getters.
- */
 @MappedSuperclass
 public abstract class EntidadeBase {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,9 +27,6 @@ public abstract class EntidadeBase {
         this.atualizadoEm = LocalDateTime.now();
     }
 
-    /**
-     * Metodo abstrato: cada subclasse descreve a si mesma de forma diferente (POLIMORFISMO).
-     */
     public abstract String getDescricao();
 
     public Long getId() {

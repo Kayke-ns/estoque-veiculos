@@ -1,6 +1,3 @@
-// Abre o sistema no Chrome (modo headless) e salva as telas usadas no relatorio em docs/prints.
-// Uso: node scripts/capturar-telas.mjs  (com a aplicacao rodando em http://localhost:8080)
-// Requer Node 22+ (WebSocket nativo) e Google Chrome instalado.
 import { spawn } from 'node:child_process';
 import { mkdirSync, writeFileSync, readFileSync, existsSync, mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -31,7 +28,7 @@ for (let i = 0; i < 50 && !alvo; i++) {
   try {
     const lista = await (await fetch(`http://127.0.0.1:${PORT}/json/list`)).json();
     alvo = lista.find((t) => t.type === 'page');
-  } catch { /* chrome ainda subindo */ }
+  } catch {  }
 }
 if (!alvo) throw new Error('Nao foi possivel conectar ao Chrome');
 
@@ -79,12 +76,10 @@ const preencher = (sel, campos) => js(`(() => { const f = document.querySelector
 
 console.log('Capturando telas...');
 
-// 1. Tela inicial
 await abrir(BASE + '/');
 await js('window.confirm = () => true; true');
 await foto('figura-1.png', true);
 
-// 7. Cadastro de marca e modelo (aba Marcas e Modelos)
 await js(`document.querySelector('[data-aba=catalogo]').click(); true`);
 await preencher('#form-marca', { nome: 'Hyundai', paisOrigem: 'Coreia do Sul' });
 await js(`document.querySelector('#form-marca').requestSubmit(); true`);
@@ -95,7 +90,6 @@ await js(`document.querySelector('#form-modelo').requestSubmit(); true`);
 await sleep(1500);
 await foto('figura-7.png', true);
 
-// 2. Cadastro de veiculo (modal preenchido)
 await js(`document.querySelector('[data-aba=veiculos]').click(); true`);
 const idHB20 = await js(`fetch('/api/modelos').then(r => r.json()).then(l => l.find(m => m.nome === 'HB20').id)`);
 await js(`document.querySelector('#btn-novo').click(); true`);
@@ -107,13 +101,11 @@ await js(`document.querySelector('#form-veiculo').requestSubmit(); true`);
 await sleep(1500);
 await foto('figura-2b.png', true);
 
-// 3. Filtro combinado
 await preencher('#filtros', { status: 'DISPONIVEL', precoMax: '120000', anoMin: '2020', ordenarPor: 'preco', direcao: 'asc' });
 await js(`document.querySelector('#filtros').requestSubmit(); true`);
 await sleep(1200);
 await foto('figura-3.png', true);
 
-// 4. Filtro por tipo
 await js(`document.querySelector('#filtros').reset(); true`);
 await sleep(800);
 await preencher('#filtros', { tipo: 'SUV' });
@@ -123,7 +115,6 @@ await foto('figura-4.png', true);
 await js(`document.querySelector('#filtros').reset(); true`);
 await sleep(1200);
 
-// 5. Edicao (UPDATE) do HB20
 const hb20 = await js(`fetch('/api/veiculos?busca=HB20').then(r => r.json()).then(l => l[0])`);
 await js(`editar(${JSON.stringify(hb20)}); true`);
 await sleep(400);
@@ -132,7 +123,6 @@ await foto('figura-5.png');
 await js(`document.querySelector('#form-veiculo').requestSubmit(); true`);
 await sleep(1500);
 
-// 9. Validacao: tentar diminuir a quilometragem de outro veiculo
 const corolla = await js(`fetch('/api/veiculos?busca=corolla&ordenarPor=preco&direcao=desc').then(r => r.json()).then(l => l[0])`);
 await js(`editar(${JSON.stringify(corolla)}); true`);
 await sleep(400);
@@ -142,7 +132,6 @@ await sleep(1200);
 await foto('figura-9.png');
 await js(`document.querySelector('#modal').close(); true`);
 
-// 6. Venda e remocao
 const polo = await js(`fetch('/api/veiculos?busca=polo').then(r => r.json()).then(l => l[0].id)`);
 await js(`vender(${polo}); true`);
 await sleep(1200);
@@ -150,11 +139,9 @@ await js(`removerVeiculo(${hb20.id}); true`);
 await sleep(700);
 await foto('figura-6.png', true);
 
-// 8. API respondendo JSON
 await abrir(BASE + '/api/veiculos?status=DISPONIVEL&precoMax=120000&ordenarPor=preco&direcao=asc', 1500);
 await foto('figura-8.png');
 
-// 10. Resultado dos testes automatizados (saida real do "mvn test")
 if (existsSync('docs/testes.log')) {
   const log = readFileSync('docs/testes.log', 'utf8')
     .split('\n')

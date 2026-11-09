@@ -12,14 +12,10 @@ import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-/**
- * Testes de integracao da API (rodam com H2 em memoria, perfil "dev").
- */
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("dev")
 class VeiculoApiTest {
-
     @Autowired
     MockMvc mvc;
 

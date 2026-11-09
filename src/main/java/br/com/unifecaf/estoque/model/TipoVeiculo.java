@@ -1,8 +1,5 @@
 package br.com.unifecaf.estoque.model;
 
-/**
- * Tipos de veiculo aceitos pelo sistema.
- */
 public enum TipoVeiculo {
     HATCH("Hatch"),
     SEDAN("Sedan"),

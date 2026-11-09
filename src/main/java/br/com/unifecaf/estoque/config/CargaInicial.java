@@ -13,14 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
-/**
- * Popula o banco com dados de exemplo na primeira execucao (somente se estiver vazio).
- * Desligue com app.carga-inicial=false.
- */
 @Component
 @ConditionalOnProperty(name = "app.carga-inicial", havingValue = "true", matchIfMissing = true)
 public class CargaInicial implements CommandLineRunner {
-
     private static final Logger log = LoggerFactory.getLogger(CargaInicial.class);
 
     private final MarcaRepository marcas;

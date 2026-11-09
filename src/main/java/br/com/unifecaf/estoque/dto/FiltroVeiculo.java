@@ -5,9 +5,6 @@ import br.com.unifecaf.estoque.model.TipoVeiculo;
 
 import java.math.BigDecimal;
 
-/**
- * Parametros opcionais de consulta de veiculos (todos podem ser nulos).
- */
 public record FiltroVeiculo(
         Long marcaId,
         Long modeloId,

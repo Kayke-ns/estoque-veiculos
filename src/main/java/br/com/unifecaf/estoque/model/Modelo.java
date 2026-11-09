@@ -2,14 +2,10 @@ package br.com.unifecaf.estoque.model;
 
 import jakarta.persistence.*;
 
-/**
- * Modelo de veiculo, sempre associado a uma Marca. Ex.: Corolla (Toyota).
- */
 @Entity
 @Table(name = "modelo",
        uniqueConstraints = @UniqueConstraint(name = "uk_modelo_marca", columnNames = {"nome", "marca_id"}))
 public class Modelo extends EntidadeBase {
-
     @Column(nullable = false, length = 80)
     private String nome;
 

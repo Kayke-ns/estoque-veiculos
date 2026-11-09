@@ -8,12 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Monta a consulta de veiculos de forma dinamica: so entram no WHERE
- * os filtros que o usuario realmente preencheu.
- */
 public final class VeiculoSpecifications {
-
     private VeiculoSpecifications() {
     }
 
