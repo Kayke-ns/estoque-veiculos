@@ -1,0 +1,709 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><title>Relatório - Gestão de Estoque de Veículos</title><style>
+@page { size: A4; margin: 22mm 20mm 20mm 20mm; @bottom-right { content: counter(page); } }
+* { box-sizing: border-box; }
+body { font-family: "Liberation Serif", "Times New Roman", serif; font-size: 11.5pt; line-height: 1.5; color: #1d2433; margin: 0; }
+h1, h2, h3, .capa, th, .code-t, .print-n, .qa span, .sumario { font-family: "Liberation Sans", Arial, sans-serif; }
+h1 { font-size: 17pt; color: #0f2747; border-bottom: 2px solid #0b5cad; padding-bottom: 4px; margin: 0 0 12px; page-break-after: avoid; }
+h2 { font-size: 13pt; color: #0b5cad; margin: 18px 0 6px; page-break-after: avoid; }
+h3 { font-size: 11.5pt; margin: 12px 0 4px; page-break-after: avoid; }
+p { margin: 0 0 8px; text-align: justify; }
+.sec { page-break-before: always; }
+.capa { height: 250mm; display: flex; flex-direction: column; justify-content: space-between; text-align: center; }
+.capa .inst { font-size: 13pt; letter-spacing: .08em; color: #0f2747; font-weight: bold; }
+.capa .tit { font-size: 24pt; font-weight: bold; color: #0f2747; line-height: 1.25; }
+.capa .sub { font-size: 13pt; color: #5b667a; margin-top: 10px; }
+.capa .aut { font-size: 12pt; }
+.capa .barra { width: 60px; height: 4px; background: #0b5cad; margin: 18px auto; }
+.sumario ol { line-height: 1.9; font-size: 11pt; }
+.qa { margin-bottom: 8px; page-break-inside: avoid; }
+.qa p { margin: 0; }
+.q { font-weight: bold; }
+.q span, .a span { color: #0b5cad; font-weight: bold; display: inline-block; width: 30px; }
+.a { padding-left: 30px; text-indent: -30px; }
+table { width: 100%; border-collapse: collapse; margin: 6px 0 12px; font-size: 10pt; page-break-inside: auto; }
+th { background: #0f2747; color: #fff; text-align: left; padding: 5px 7px; font-size: 9.5pt; }
+td { border-bottom: 1px solid #dde2ea; padding: 5px 7px; vertical-align: top; }
+tr { page-break-inside: avoid; }
+code { font-family: "DejaVu Sans Mono", monospace; font-size: 8.8pt; background: #f1f4f8; padding: 0 3px; border-radius: 3px; }
+.fig { text-align: center; margin: 8px 0 14px; page-break-inside: avoid; }
+.fig svg { width: 100%; height: auto; }
+.fig .leg { font-size: 9.5pt; color: #5b667a; margin-top: 4px; }
+.code { border: 1px solid #dde2ea; border-radius: 5px; margin: 8px 0 14px; }
+.code-t { background: #0f2747; color: #fff; font-size: 9pt; padding: 4px 9px; border-radius: 5px 5px 0 0; }
+.code pre { margin: 0; padding: 8px 10px; font-family: "DejaVu Sans Mono", monospace; font-size: 7.6pt; line-height: 1.38; white-space: pre-wrap; background: #fafbfc; }
+.box { background: #eef4fb; border-left: 4px solid #0b5cad; padding: 8px 12px; margin: 8px 0 12px; font-size: 10.5pt; }
+.print { page-break-inside: avoid; margin-bottom: 14px; }
+.print-n { font-size: 9pt; font-weight: bold; color: #0b5cad; }
+.print-box { border: 1px solid #dde2ea; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #9aa8bc; font-family: Arial, sans-serif; font-size: 10pt; margin: 3px 0 5px; padding: 10px; text-align: center; }
+.print-box { padding:0; display:block; } .print-box img { width:100%; display:block; border-radius:6px; }
+.print p { text-align: left;  font-size: 10pt; }
+ul { margin: 0 0 8px; padding-left: 22px; } li { margin-bottom: 3px; }
+</style></head><body>
+
+<div class="capa">
+  <div class="inst">CENTRO UNIVERSITÁRIO UniFECAF<br><span style="font-weight:normal;font-size:11pt;letter-spacing:0">Object Oriented Programming</span></div>
+  <div>
+    <div class="tit">Sistema Automotivo<br>Gestão de Estoque de Veículos</div>
+    <div class="barra"></div>
+    <div class="sub">Relatório técnico do sistema CRUD orientado a objetos<br>Java · Spring Boot · MySQL</div>
+  </div>
+  <div class="aut">Kayke Nogueira de Souza<br><br>São Paulo, novembro de 2026</div>
+</div>
+
+<div class="sec sumario">
+<h1>Sumário</h1>
+<ol>
+<li>Introdução</li>
+<li>Levantamento de requisitos</li>
+<li>Requisitos funcionais e não funcionais</li>
+<li>Entidades do sistema</li>
+<li>Aplicação dos conceitos de Programação Orientada a Objetos</li>
+<li>Tecnologias escolhidas</li>
+<li>Arquitetura e API REST</li>
+<li>Parte prática: códigos principais</li>
+<li>Parte prática: sistema em funcionamento</li>
+<li>Como executar e repositório</li>
+<li>Considerações finais</li>
+<li>Referências</li>
+</ol>
+</div>
+
+<div class="sec">
+<h1>1. Introdução</h1>
+<p>Concessionárias e revendas de veículos lidam diariamente com um estoque que muda o tempo todo: carros entram, recebem novos preços, rodam em test drives, são reservados e vendidos. Quando esse controle é feito em planilhas separadas ou anotações manuais, as informações ficam desatualizadas, vendedores oferecem carros que já foram vendidos e o gerente não tem uma visão confiável do que está disponível.</p>
+<p>Este trabalho apresenta o desenvolvimento de um <b>sistema CRUD orientado a objetos para gestão de estoque de veículos</b>. O sistema permite cadastrar marcas, modelos e veículos, consultar o estoque com filtros combinados (marca, modelo, tipo, preço, ano e status), atualizar preço, quilometragem e situação de cada veículo e removê-los quando vendidos ou descontinuados.</p>
+<p>A solução foi construída como uma <b>API REST em Java com Spring Boot</b>, com persistência em <b>MySQL</b> por meio do Spring Data JPA, e uma interface web simples que consome essa API. O objetivo, além de resolver o problema de negócio, é aplicar na prática os conceitos de Programação Orientada a Objetos: classes, atributos, métodos, encapsulamento, herança, abstração e polimorfismo.</p>
+
+<h2>1.1 Problema e afetados</h2>
+<p>A principal causa do problema é a <b>falta de organização</b>: métodos manuais ou sistemas fragmentados dificultam o acesso e a atualização dos dados. Os principais afetados são:</p>
+<ul>
+<li><b>Vendedores:</b> perdem tempo procurando informações e correm o risco de passar dados errados ao cliente.</li>
+<li><b>Clientes:</b> têm dificuldade para encontrar um veículo que atenda às suas necessidades, o que leva a insatisfação e perda de vendas.</li>
+<li><b>Gerentes e administradores:</b> não conseguem monitorar a disponibilidade, controlar o inventário nem tomar decisões com base em dados confiáveis.</li>
+</ul>
+<p>A longo prazo, sem uma solução, a empresa acumula dificuldades de gestão, vendas perdidas e decisões tomadas com base em informações erradas.</p>
+
+<h2>1.2 Soluções avaliadas</h2>
+<table>
+<tr><th style="width:24%">Solução</th><th>Prós</th><th>Contras</th></tr>
+<tr><td>API com Spring Boot</td><td>Configuração automática, padrão de mercado, ecossistema maduro, fácil de expor endpoints REST.</td><td>Curva de aprendizado inicial para quem não conhece injeção de dependência e anotações.</td></tr>
+<tr><td>Comunicação com banco de dados (MySQL + JPA)</td><td>Dados persistentes e consistentes, consultas eficientes com índices, mapeamento objeto-relacional automático.</td><td>Exige conhecer modelagem relacional e configurar o servidor de banco.</td></tr>
+<tr><td>Integração com front-end</td><td>Permite que vendedores usem o sistema sem conhecer a API; a mesma API serve site e portais no futuro.</td><td>Adiciona uma camada a mais para manter (HTML, CSS e JavaScript).</td></tr>
+</table>
+<p>As três soluções são complementares e foram adotadas em conjunto. Os principais desafios previstos eram a pouca familiaridade com as tecnologias, os conceitos de banco de dados e as integrações entre camadas; eles foram tratados com uma arquitetura em camadas bem separadas, um script SQL documentado e um perfil de execução com banco em memória para facilitar os testes.</p>
+</div>
+
+<div class="sec">
+<h1>2. Levantamento de requisitos</h1>
+<p>Para levantar os requisitos, foi simulada uma entrevista com o gerente de uma concessionária de médio porte. As perguntas buscaram entender quem usa o sistema, quais dados são necessários, quais operações são frequentes e quais regras precisam ser garantidas. As respostas abaixo são simuladas e serviram de base para os requisitos da seção 3.</p>
+<div class="qa"><p class="q"><span>P1.</span> Quem vai usar o sistema no dia a dia?</p><p class="a"><span>R.</span> Vendedores, para consultar e reservar veículos, e o gerente da loja, que cadastra, atualiza preços e acompanha o estoque.</p></div><div class="qa"><p class="q"><span>P2.</span> Quais informações de cada veículo são indispensáveis?</p><p class="a"><span>R.</span> Marca, modelo, ano de fabricação, cor, preço, quilometragem, placa e a situação do carro (disponível, reservado, vendido ou fora de linha).</p></div><div class="qa"><p class="q"><span>P3.</span> Como o estoque é controlado hoje?</p><p class="a"><span>R.</span> Em planilhas separadas por vendedor e em anotações no quadro da loja. Muitas vezes um vendedor oferece um carro que já foi vendido por outro.</p></div><div class="qa"><p class="q"><span>P4.</span> Quais buscas os vendedores mais fazem quando um cliente chega?</p><p class="a"><span>R.</span> Faixa de preço, marca, tipo de carro (SUV, sedan, picape) e ano mínimo. É comum o cliente dizer, por exemplo, que quer um SUV até 120 mil, de 2020 para cima.</p></div><div class="qa"><p class="q"><span>P5.</span> Marcas e modelos precisam de cadastro próprio ou podem ser digitados livremente?</p><p class="a"><span>R.</span> Precisam de cadastro próprio. Hoje cada um escreve de um jeito (&quot;VW&quot;, &quot;Volks&quot;, &quot;Volkswagen&quot;), o que atrapalha as buscas e os relatórios.</p></div><div class="qa"><p class="q"><span>P6.</span> O que acontece com o veículo quando ele é vendido?</p><p class="a"><span>R.</span> Ele deve sair da vitrine de disponíveis, mas o histórico precisa continuar existindo. A remoção definitiva só ocorre em casos de erro de cadastro ou descontinuação.</p></div><div class="qa"><p class="q"><span>P7.</span> Quais dados mudam com mais frequência?</p><p class="a"><span>R.</span> Preço (promoções e reajustes), quilometragem (test drives e deslocamentos) e status (reservas e vendas).</p></div><div class="qa"><p class="q"><span>P8.</span> Existe alguma regra que o sistema deve impedir?</p><p class="a"><span>R.</span> Preço zerado ou negativo, quilometragem que diminui, placa duplicada, ano impossível e vender duas vezes o mesmo carro.</p></div><div class="qa"><p class="q"><span>P9.</span> O gerente precisa de algum indicador?</p><p class="a"><span>R.</span> Sim: quantos carros estão disponíveis, reservados e vendidos, e o valor total parado em estoque disponível.</p></div><div class="qa"><p class="q"><span>P10.</span> Quantos veículos a loja costuma ter e quantas pessoas usam ao mesmo tempo?</p><p class="a"><span>R.</span> Entre 80 e 300 veículos, com até 10 pessoas consultando ao mesmo tempo. As buscas precisam responder em menos de 1 segundo.</p></div><div class="qa"><p class="q"><span>P11.</span> Em quais dispositivos o sistema será usado?</p><p class="a"><span>R.</span> Computador da loja e, eventualmente, tablet no pátio. A tela precisa ser simples e funcionar em telas menores.</p></div><div class="qa"><p class="q"><span>P12.</span> O sistema precisa conversar com outros sistemas no futuro?</p><p class="a"><span>R.</span> Sim, a ideia é publicar o estoque no site da loja e em portais de anúncio. Por isso a comunicação deve ser por uma API padronizada.</p></div>
+<div class="box"><b>Síntese:</b> o sistema precisa de cadastros padronizados de marcas e modelos, controle completo do ciclo de vida do veículo (disponível, reservado, vendido, descontinuado), filtros combinados rápidos, validações que impeçam dados inconsistentes, indicadores para o gerente e uma API que possa ser integrada a outros canais.</div>
+</div>
+
+<div class="sec">
+<h1>3. Requisitos funcionais e não funcionais</h1>
+<h2>3.1 Requisitos funcionais</h2>
+<table>
+<tr><th style="width:9%">ID</th><th style="width:27%">Requisito</th><th>Descrição e como foi atendido</th></tr>
+<tr><td>RF01</td><td>Cadastro de veículos</td><td>Cadastrar veículo com modelo, marca (via modelo), ano de fabricação, cor, preço, quilometragem, placa e status. Endpoint <code>POST /api/veiculos</code> e modal "Novo veículo".</td></tr>
+<tr><td>RF02</td><td>Cadastro de marcas e modelos</td><td>Registrar marcas e modelos, sendo cada modelo associado a uma marca e cada veículo associado a um modelo. Endpoints <code>/api/marcas</code> e <code>/api/modelos</code>.</td></tr>
+<tr><td>RF03</td><td>Consulta e filtro de veículos</td><td>Consultar por marca, modelo, tipo, faixa de preço, faixa de ano, cor, status e busca livre, com ordenação. Endpoint <code>GET /api/veiculos</code> com parâmetros opcionais.</td></tr>
+<tr><td>RF04</td><td>Atualização de informações</td><td>Editar preço, quilometragem e status (<code>PATCH</code>) ou todos os dados (<code>PUT</code>).</td></tr>
+<tr><td>RF05</td><td>Remoção de veículos</td><td>Remover veículos vendidos ou descontinuados (<code>DELETE /api/veiculos/{id}</code>).</td></tr>
+<tr><td>RF06</td><td>Registro de venda</td><td>Marcar um veículo como vendido, impedindo venda em duplicidade (<code>POST /api/veiculos/{id}/vender</code>).</td></tr>
+<tr><td>RF07</td><td>Resumo do estoque</td><td>Exibir totais por status e o valor do estoque disponível (<code>GET /api/veiculos/resumo</code>).</td></tr>
+<tr><td>RF08</td><td>Validação de dados</td><td>Rejeitar preço não positivo, quilometragem negativa ou menor que a atual, ano inválido, placa duplicada e campos obrigatórios vazios.</td></tr>
+</table>
+
+<h2>3.2 Requisitos não funcionais</h2>
+<table>
+<tr><th style="width:9%">ID</th><th style="width:27%">Requisito</th><th>Descrição e como foi atendido</th></tr>
+<tr><td>RNF01</td><td>Usabilidade</td><td>Interface simples, em uma única página com duas abas, filtros visíveis, formulário em janela modal, mensagens de sucesso e de erro em português e layout que se adapta a telas menores.</td></tr>
+<tr><td>RNF02</td><td>Performance</td><td>Filtros executados no banco (não em memória) por meio de consultas dinâmicas; índices em <code>status</code>, <code>preco</code> e <code>ano_fabricacao</code>; transações somente leitura nas consultas.</td></tr>
+<tr><td>RNF03</td><td>Integridade dos dados</td><td>Chaves estrangeiras, restrições de unicidade e verificações no banco, além das validações nas próprias classes.</td></tr>
+<tr><td>RNF04</td><td>Manutenibilidade</td><td>Arquitetura em camadas (controller, service, repository, model), DTOs separados das entidades e código organizado por pacotes.</td></tr>
+<tr><td>RNF05</td><td>Interoperabilidade</td><td>API REST com JSON, permitindo integração futura com site e portais de anúncio.</td></tr>
+<tr><td>RNF06</td><td>Tratamento de erros</td><td>Respostas de erro padronizadas em JSON, com o código HTTP correto (400, 404 ou 409) e detalhes legíveis.</td></tr>
+</table>
+</div>
+
+<div class="sec">
+<h1>4. Entidades do sistema</h1>
+<p>O domínio foi modelado com três entidades persistentes e dois tipos enumerados. Todas as entidades herdam de uma superclasse abstrata comum, <code>EntidadeBase</code>, que concentra o identificador e as datas de auditoria.</p>
+<table>
+<tr><th style="width:18%">Entidade</th><th style="width:40%">Atributos</th><th>Responsabilidade</th></tr>
+<tr><td><b>Marca</b></td><td>id, nome (único), paisOrigem</td><td>Representa o fabricante (Toyota, Volkswagen, Honda...). Padroniza os nomes e evita variações como "VW" e "Volks".</td></tr>
+<tr><td><b>Modelo</b></td><td>id, nome, tipo, marca</td><td>Representa o modelo comercial (Corolla, Polo, Civic) e seu tipo. Pertence a uma marca; o nome é único dentro da marca.</td></tr>
+<tr><td><b>Veiculo</b></td><td>id, modelo, anoFabricacao, cor, preco, quilometragem, status, placa</td><td>Unidade física do estoque. Concentra as regras de preço, quilometragem, ano e venda.</td></tr>
+<tr><td><b>TipoVeiculo</b> (enum)</td><td>HATCH, SEDAN, SUV, PICAPE, MOTO, UTILITARIO</td><td>Categoriza o modelo, permitindo filtrar por tipo de veículo.</td></tr>
+<tr><td><b>StatusVeiculo</b> (enum)</td><td>DISPONIVEL, RESERVADO, VENDIDO, DESCONTINUADO</td><td>Situação do veículo no estoque.</td></tr>
+</table>
+<h2>4.1 Relacionamentos e modelo físico</h2>
+<p>Uma marca possui vários modelos (1:N) e um modelo possui vários veículos (1:N). Dessa forma, o veículo chega à sua marca através do modelo, sem duplicar dados. O modelo físico completo, compatível com MySQL 8, está no arquivo <code>database/schema.sql</code>.</p>
+<div class="fig">
+<svg viewBox="0 0 640 230" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif" font-size="11">
+ <defs><marker id="m" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#33415c"/></marker></defs>
+ <g>
+  <rect x="10" y="20" width="170" height="150" rx="6" fill="#fff" stroke="#0b5cad"/>
+  <rect x="10" y="20" width="170" height="26" rx="6" fill="#0b5cad"/><text x="95" y="38" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">MARCA</text>
+  <text x="20" y="64">PK id BIGINT</text><text x="20" y="82">nome VARCHAR(60) UNIQUE</text><text x="20" y="100">pais_origem VARCHAR(60)</text>
+  <text x="20" y="118">criado_em DATETIME</text><text x="20" y="136">atualizado_em DATETIME</text>
+ </g>
+ <g>
+  <rect x="235" y="20" width="170" height="150" rx="6" fill="#fff" stroke="#0b5cad"/>
+  <rect x="235" y="20" width="170" height="26" rx="6" fill="#0b5cad"/><text x="320" y="38" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">MODELO</text>
+  <text x="245" y="64">PK id BIGINT</text><text x="245" y="82">nome VARCHAR(80)</text><text x="245" y="100">tipo VARCHAR(20)</text>
+  <text x="245" y="118">FK marca_id BIGINT</text><text x="245" y="136">criado_em / atualizado_em</text><text x="245" y="154" fill="#5b667a">UNIQUE (nome, marca_id)</text>
+ </g>
+ <g>
+  <rect x="460" y="10" width="170" height="210" rx="6" fill="#fff" stroke="#0b5cad"/>
+  <rect x="460" y="10" width="170" height="26" rx="6" fill="#0b5cad"/><text x="545" y="28" text-anchor="middle" fill="#fff" font-weight="bold" font-size="12">VEICULO</text>
+  <text x="470" y="54">PK id BIGINT</text><text x="470" y="72">FK modelo_id BIGINT</text><text x="470" y="90">ano_fabricacao INT</text>
+  <text x="470" y="108">cor VARCHAR(30)</text><text x="470" y="126">preco DECIMAL(12,2)</text><text x="470" y="144">quilometragem INT</text>
+  <text x="470" y="162">status VARCHAR(20)</text><text x="470" y="180">placa VARCHAR(10) UNIQUE</text><text x="470" y="198">criado_em / atualizado_em</text>
+ </g>
+ <line x1="180" y1="95" x2="233" y2="95" stroke="#33415c" marker-end="url(#m)"/>
+ <text x="186" y="88" font-size="10" fill="#33415c">1</text><text x="222" y="88" font-size="10" fill="#33415c">N</text>
+ <line x1="405" y1="95" x2="458" y2="95" stroke="#33415c" marker-end="url(#m)"/>
+ <text x="411" y="88" font-size="10" fill="#33415c">1</text><text x="447" y="88" font-size="10" fill="#33415c">N</text>
+</svg><div class="leg">Figura A. Modelo entidade-relacionamento (físico)</div></div>
+<h2>4.2 Diagrama de classes</h2>
+<div class="fig">
+<svg viewBox="0 0 640 250" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif" font-size="11">
+ <defs><marker id="h" markerWidth="12" markerHeight="12" refX="6" refY="1" orient="auto-start-reverse"><path d="M0,10 L6,0 L12,10 Z" fill="#fff" stroke="#33415c"/></marker></defs>
+ <rect x="215" y="8" width="210" height="92" rx="5" fill="#eef4fb" stroke="#0b5cad"/>
+ <text x="320" y="25" text-anchor="middle" font-style="italic" font-weight="bold">&#171;abstract&#187; EntidadeBase</text>
+ <line x1="215" y1="32" x2="425" y2="32" stroke="#0b5cad"/>
+ <text x="225" y="48">- id : Long</text><text x="225" y="62">- criadoEm, atualizadoEm</text>
+ <line x1="215" y1="68" x2="425" y2="68" stroke="#0b5cad"/>
+ <text x="225" y="84" font-style="italic">+ getDescricao() : String {abstract}</text>
+ <path d="M320,100 L320,125 M100,125 L540,125 M100,125 L100,150 M320,125 L320,150 M540,125 L540,150" stroke="#33415c" fill="none"/>
+ <path d="M314,112 L320,100 L326,112 Z" fill="#fff" stroke="#33415c"/>
+ <g><rect x="20" y="150" width="160" height="90" rx="5" fill="#fff" stroke="#0b5cad"/><text x="100" y="167" text-anchor="middle" font-weight="bold">Marca</text>
+ <line x1="20" y1="173" x2="180" y2="173" stroke="#0b5cad"/><text x="28" y="189">- nome, paisOrigem</text><line x1="20" y1="196" x2="180" y2="196" stroke="#0b5cad"/>
+ <text x="28" y="212">+ getDescricao()</text><text x="28" y="228">+ setNome() valida</text></g>
+ <g><rect x="240" y="150" width="160" height="90" rx="5" fill="#fff" stroke="#0b5cad"/><text x="320" y="167" text-anchor="middle" font-weight="bold">Modelo</text>
+ <line x1="240" y1="173" x2="400" y2="173" stroke="#0b5cad"/><text x="248" y="189">- nome, tipo, marca</text><line x1="240" y1="196" x2="400" y2="196" stroke="#0b5cad"/>
+ <text x="248" y="212">+ getDescricao()</text><text x="248" y="228">+ getMarca()</text></g>
+ <g><rect x="460" y="150" width="170" height="90" rx="5" fill="#fff" stroke="#0b5cad"/><text x="545" y="167" text-anchor="middle" font-weight="bold">Veiculo</text>
+ <line x1="460" y1="173" x2="630" y2="173" stroke="#0b5cad"/><text x="468" y="189">- modelo, ano, cor, preco, km...</text><line x1="460" y1="196" x2="630" y2="196" stroke="#0b5cad"/>
+ <text x="468" y="212">+ getDescricao()   + vender()</text><text x="468" y="228">+ setQuilometragem() valida</text></g>
+</svg><div class="leg">Figura B. Hierarquia de classes do domínio</div></div>
+</div>
+
+<div class="sec">
+<h1>5. Aplicação dos conceitos de POO</h1>
+<h2>5.1 Classes e objetos</h2>
+<p>Cada conceito do negócio virou uma classe: <code>Marca</code>, <code>Modelo</code> e <code>Veiculo</code> no domínio; <code>VeiculoService</code>, <code>MarcaService</code> e <code>ModeloService</code> para as regras; controllers para a API; e DTOs para entrada e saída. Ao cadastrar um carro, por exemplo, o sistema cria um objeto <code>Veiculo</code> com estado próprio e o persiste no banco.</p>
+<h2>5.2 Atributos</h2>
+<p>Os atributos descrevem o estado de cada objeto, com tipos adequados ao dado: <code>BigDecimal</code> para preço (evita erros de arredondamento de <code>double</code> com dinheiro), <code>Integer</code> para ano e quilometragem e enums para tipo e status, o que impede valores fora da lista permitida.</p>
+<h2>5.3 Métodos</h2>
+<p>Além de getters e setters, as classes têm métodos de comportamento. <code>Veiculo.vender()</code> muda o status e impede vender duas vezes; <code>Veiculo.isDisponivel()</code> responde se o carro pode ser oferecido; <code>getDescricao()</code> monta uma descrição legível do objeto.</p>
+<h2>5.4 Encapsulamento</h2>
+<p>Todos os atributos são <code>private</code>. O acesso é feito por métodos públicos que <b>validam os dados antes de alterar o estado</b>. O setter de quilometragem, por exemplo, não aceita valor negativo nem menor que o atual; o de preço não aceita zero ou negativo; o de ano só aceita valores entre 1950 e o ano seguinte. Assim, nenhum código externo consegue deixar um veículo em estado inválido. O <code>id</code> e as datas de auditoria só têm getters, porque são controlados pelo próprio sistema. Os construtores sem argumentos exigidos pelo JPA são <code>protected</code>, impedindo a criação de objetos incompletos fora do framework.</p>
+<h2>5.5 Herança</h2>
+<p><code>Marca</code>, <code>Modelo</code> e <code>Veiculo</code> estendem <code>EntidadeBase</code> e herdam o identificador, as datas de criação e atualização e os métodos de ciclo de vida (<code>@PrePersist</code> e <code>@PreUpdate</code>) que preenchem essas datas automaticamente. Isso evita repetir o mesmo código nas três classes. Também há herança nas exceções: <code>RecursoNaoEncontradoException</code> e <code>RegraNegocioException</code> estendem <code>RuntimeException</code>.</p>
+<h2>5.6 Abstração</h2>
+<p><code>EntidadeBase</code> é uma classe <b>abstrata</b>: não pode ser instanciada diretamente, pois não representa nada concreto sozinha. Ela define o método abstrato <code>getDescricao()</code>, que obriga cada subclasse a implementar sua própria descrição. Os repositórios também são abstrações: são interfaces e o Spring gera a implementação.</p>
+<h2>5.7 Polimorfismo</h2>
+<p>O mesmo método <code>getDescricao()</code> se comporta de forma diferente conforme o objeto: em <code>Marca</code> retorna "Toyota (Japao)", em <code>Modelo</code> retorna "Toyota Corolla - Sedan" e em <code>Veiculo</code> retorna "Toyota Corolla 2023 Prata". Um código que receba uma <code>EntidadeBase</code> pode chamar <code>getDescricao()</code> sem saber qual subclasse está tratando. Há ainda polimorfismo por interface: os serviços dependem de <code>VeiculoRepository</code>, e não de uma implementação concreta.</p>
+<div class="code"><div class="code-t">EntidadeBase.java</div><pre>/**
+ * Superclasse abstrata de todas as entidades do sistema.
+ *
+ * HERANCA: Marca, Modelo e Veiculo herdam o identificador e as datas de auditoria.
+ * ABSTRACAO: a classe e abstrata, ou seja, nao pode ser instanciada diretamente.
+ * ENCAPSULAMENTO: atributos privados, acessados apenas por getters.
+ */
+@MappedSuperclass
+public abstract class EntidadeBase {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = &quot;criado_em&quot;, nullable = false, updatable = false)
+    private LocalDateTime criadoEm;
+
+    @Column(name = &quot;atualizado_em&quot;)
+    private LocalDateTime atualizadoEm;
+
+    @PrePersist
+    protected void aoCriar() {
+        this.criadoEm = LocalDateTime.now();
+        this.atualizadoEm = this.criadoEm;
+    }
+
+    @PreUpdate
+    protected void aoAtualizar() {
+        this.atualizadoEm = LocalDateTime.now();
+    }
+
+    /**
+     * Metodo abstrato: cada subclasse descreve a si mesma de forma diferente (POLIMORFISMO).
+     */
+    public abstract String getDescricao();
+
+    public Long getId() {
+        return id;
+    }
+
+    public LocalDateTime getCriadoEm() {
+        return criadoEm;
+    }
+
+    public LocalDateTime getAtualizadoEm() {
+        return atualizadoEm;
+    }
+}</pre></div>
+</div>
+
+<div class="sec">
+<h1>6. Tecnologias escolhidas</h1>
+<table>
+<tr><th style="width:22%">Tecnologia</th><th>Justificativa</th></tr>
+<tr><td><b>Java 17+</b></td><td>Linguagem fortemente orientada a objetos, tipada e muito usada no mercado corporativo. Recursos modernos como <i>records</i> deixam os DTOs curtos e imutáveis.</td></tr>
+<tr><td><b>Spring Boot 3</b></td><td>Configuração automática, servidor web embutido (Tomcat) e injeção de dependência. Permite criar uma API REST completa com poucas linhas, com padrão amplamente adotado nas empresas.</td></tr>
+<tr><td><b>Spring Data JPA / Hibernate</b></td><td>Mapeia as classes Java para tabelas (ORM), gera consultas a partir do nome dos métodos e permite filtros dinâmicos com <i>Specifications</i>, sem escrever SQL manual.</td></tr>
+<tr><td><b>Bean Validation</b></td><td>Valida automaticamente os dados de entrada com anotações como <code>@NotBlank</code> e <code>@Positive</code>.</td></tr>
+<tr><td><b>MySQL 8</b></td><td>Banco relacional gratuito, robusto e popular, adequado a dados estruturados com relacionamentos, chaves estrangeiras e índices.</td></tr>
+<tr><td><b>H2 (perfil dev/testes)</b></td><td>Banco em memória para rodar o projeto e os testes automatizados sem precisar instalar o MySQL.</td></tr>
+<tr><td><b>HTML, CSS e JavaScript</b></td><td>Frontend leve, sem frameworks, servido pelo próprio Spring Boot, suficiente para listar, filtrar e editar veículos.</td></tr>
+<tr><td><b>Maven e Git/GitHub</b></td><td>Gerenciamento de dependências e build; versionamento e publicação do código.</td></tr>
+</table>
+</div>
+
+<div class="sec">
+<h1>7. Arquitetura e API REST</h1>
+<p>O sistema segue a arquitetura em camadas do padrão <b>MVC aplicado a APIs REST</b>. Cada camada tem uma responsabilidade única e só conversa com a camada vizinha:</p>
+<div class="fig">
+<svg viewBox="0 0 640 110" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif" font-size="11">
+ <defs><marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#33415c"/></marker></defs>
+ <g text-anchor="middle">
+  <rect x="5" y="25" width="105" height="56" rx="6" fill="#f4f6f9" stroke="#5b667a"/><text x="57" y="49" font-weight="bold">Frontend</text><text x="57" y="65">HTML/CSS/JS</text>
+  <rect x="135" y="25" width="105" height="56" rx="6" fill="#eef4fb" stroke="#0b5cad"/><text x="187" y="49" font-weight="bold">Controller</text><text x="187" y="65">REST + DTOs</text>
+  <rect x="265" y="25" width="105" height="56" rx="6" fill="#eef4fb" stroke="#0b5cad"/><text x="317" y="49" font-weight="bold">Service</text><text x="317" y="65">Regras de negócio</text>
+  <rect x="395" y="25" width="105" height="56" rx="6" fill="#eef4fb" stroke="#0b5cad"/><text x="447" y="49" font-weight="bold">Repository</text><text x="447" y="65">Spring Data JPA</text>
+  <rect x="525" y="25" width="105" height="56" rx="6" fill="#f4f6f9" stroke="#5b667a"/><text x="577" y="49" font-weight="bold">MySQL</text><text x="577" y="65">estoque_veiculos</text>
+ </g>
+ <g stroke="#33415c" marker-end="url(#a)"><line x1="110" y1="53" x2="133" y2="53"/><line x1="240" y1="53" x2="263" y2="53"/><line x1="370" y1="53" x2="393" y2="53"/><line x1="500" y1="53" x2="523" y2="53"/></g>
+ <text x="57" y="100" text-anchor="middle" font-size="9" fill="#5b667a">JSON via HTTP</text>
+ <text x="577" y="100" text-anchor="middle" font-size="9" fill="#5b667a">SQL via Hibernate</text>
+</svg><div class="leg">Figura C. Fluxo de uma requisição</div></div>
+<ul>
+<li><b>Model:</b> entidades e enums do domínio (<code>model/</code>).</li>
+<li><b>Controller:</b> recebe as requisições HTTP, valida a entrada e devolve JSON (<code>controller/</code>).</li>
+<li><b>Service:</b> regras de negócio e controle de transações (<code>service/</code>).</li>
+<li><b>Repository:</b> acesso ao banco via Spring Data JPA (<code>repository/</code>).</li>
+<li><b>DTO:</b> objetos de transferência que separam o formato da API das entidades (<code>dto/</code>).</li>
+<li><b>Exception:</b> tratamento global de erros com <code>@RestControllerAdvice</code> (<code>exception/</code>).</li>
+</ul>
+<h2>7.1 Endpoints</h2>
+<table><tr><th style="width:15%">Método</th><th style="width:30%">Rota</th><th>Descrição</th></tr><tr><td><code>GET</code></td><td><code>/api/veiculos</code></td><td>Consulta com filtros: marcaId, modeloId, tipo, status, precoMin/Max, anoMin/Max, cor, busca, ordenação</td></tr><tr><td><code>GET</code></td><td><code>/api/veiculos/{id}</code></td><td>Busca um veículo</td></tr><tr><td><code>GET</code></td><td><code>/api/veiculos/resumo</code></td><td>Indicadores do estoque</td></tr><tr><td><code>POST</code></td><td><code>/api/veiculos</code></td><td>Cadastra veículo</td></tr><tr><td><code>PUT</code></td><td><code>/api/veiculos/{id}</code></td><td>Substitui todos os dados</td></tr><tr><td><code>PATCH</code></td><td><code>/api/veiculos/{id}</code></td><td>Atualiza preço, quilometragem e/ou status</td></tr><tr><td><code>POST</code></td><td><code>/api/veiculos/{id}/vender</code></td><td>Marca como vendido</td></tr><tr><td><code>DELETE</code></td><td><code>/api/veiculos/{id}</code></td><td>Remove do estoque</td></tr><tr><td><code>GET/POST</code></td><td><code>/api/marcas</code></td><td>Lista e cadastra marcas</td></tr><tr><td><code>PUT/DELETE</code></td><td><code>/api/marcas/{id}</code></td><td>Edita e remove marca (bloqueia se houver modelos)</td></tr><tr><td><code>GET/POST</code></td><td><code>/api/modelos</code></td><td>Lista (opcionalmente por marca) e cadastra modelos</td></tr><tr><td><code>PUT/DELETE</code></td><td><code>/api/modelos/{id}</code></td><td>Edita e remove modelo (bloqueia se houver veículos)</td></tr></table>
+<p style="text-align:left">Exemplo de consulta:</p><div class="code"><pre>GET /api/veiculos?status=DISPONIVEL&amp;precoMax=120000&amp;anoMin=2020&amp;ordenarPor=preco&amp;direcao=asc</pre></div><p>A consulta acima retorna os veículos disponíveis de até R$ 120 mil, fabricados a partir de 2020, do mais barato para o mais caro.</p>
+<h2>7.2 Estrutura de pastas</h2>
+<div class="code"><div class="code-t">estoque-veiculos/</div><pre>database/schema.sql            modelo físico MySQL
+requisicoes.http               requisições prontas para testar a API
+src/main/java/br/com/unifecaf/estoque/
+  EstoqueVeiculosApplication.java
+  model/       EntidadeBase, Marca, Modelo, Veiculo, TipoVeiculo, StatusVeiculo
+  dto/         MarcaDTO, ModeloDTO, VeiculoDTO, FiltroVeiculo, ResumoEstoque
+  repository/  MarcaRepository, ModeloRepository, VeiculoRepository, VeiculoSpecifications
+  service/     MarcaService, ModeloService, VeiculoService
+  controller/  MarcaController, ModeloController, VeiculoController
+  exception/   RecursoNaoEncontradoException, RegraNegocioException, TratadorDeErros
+  config/      CargaInicial
+src/main/resources/
+  application.properties, application-dev.properties
+  static/      index.html, style.css, app.js
+src/test/java/br/com/unifecaf/estoque/VeiculoApiTest.java</pre></div>
+</div>
+
+<div class="sec">
+<h1>8. Parte prática: códigos principais</h1>
+<p>A seguir estão os trechos centrais do sistema. O código completo está no repositório do GitHub.</p>
+<h2>8.1 Entidade Veiculo (encapsulamento e regras de negócio)</h2>
+<div class="code"><div class="code-t">Veiculo.java</div><pre>@Entity
+@Table(name = &quot;veiculo&quot;, indexes = {
+        @Index(name = &quot;idx_veiculo_status&quot;, columnList = &quot;status&quot;),
+        @Index(name = &quot;idx_veiculo_preco&quot;, columnList = &quot;preco&quot;),
+        @Index(name = &quot;idx_veiculo_ano&quot;, columnList = &quot;ano_fabricacao&quot;)
+})
+public class Veiculo extends EntidadeBase {
+
+    public static final int ANO_MINIMO = 1950;
+
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
+    @JoinColumn(name = &quot;modelo_id&quot;, nullable = false)
+    private Modelo modelo;
+
+    @Column(name = &quot;ano_fabricacao&quot;, nullable = false)
+    private Integer anoFabricacao;
+
+    @Column(nullable = false, length = 30)
+    private String cor;
+
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal preco;
+
+    @Column(nullable = false)
+    private Integer quilometragem;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private StatusVeiculo status;
+
+    @Column(unique = true, length = 10)
+    private String placa;
+
+    protected Veiculo() {
+    }
+
+    public Veiculo(Modelo modelo, Integer anoFabricacao, String cor, BigDecimal preco,
+                   Integer quilometragem, String placa) {
+        this.modelo = modelo;
+        setAnoFabricacao(anoFabricacao);
+        setCor(cor);
+        setPreco(preco);
+        this.quilometragem = validarKm(quilometragem);
+        this.placa = placa;
+        this.status = StatusVeiculo.DISPONIVEL;
+    }
+
+    @Override
+    public String getDescricao() {
+        return modelo.getMarca().getNome() + &quot; &quot; + modelo.getNome() + &quot; &quot; + anoFabricacao + &quot; &quot; + cor;
+    }
+
+    /** Regra de negocio: marca o veiculo como vendido. */
+    public void vender() {
+        if (status == StatusVeiculo.VENDIDO) {
+            throw new IllegalStateException(&quot;Veiculo ja foi vendido&quot;);
+        }
+        this.status = StatusVeiculo.VENDIDO;
+    }
+
+    public boolean isDisponivel() {
+        return status == StatusVeiculo.DISPONIVEL;
+    }
+
+    // ---------- getters e setters com validacao ----------
+
+    public Modelo getModelo() {</pre></div>
+<p style="font-size:10pt;color:#5b667a">Trecho; os demais getters e setters seguem o mesmo padrão de validação.</p>
+<div class="code"><div class="code-t">Veiculo.java (validação da quilometragem)</div><pre>    public void setQuilometragem(Integer novaKm) {
+        validarKm(novaKm);
+        if (this.quilometragem != null &amp;&amp; novaKm &lt; this.quilometragem) {
+            throw new IllegalArgumentException(&quot;A quilometragem nao pode ser menor que a atual (&quot; + this.quilometragem + &quot; km)&quot;);
+        }
+        this.quilometragem = novaKm;
+    }
+
+    private static Integer validarKm(Integer km) {
+        if (km == null || km &lt; 0) {
+            throw new IllegalArgumentException(&quot;A quilometragem nao pode ser negativa&quot;);
+        }
+        return km;</pre></div>
+
+<h2>8.2 Filtros dinâmicos (consulta)</h2>
+<div class="code"><div class="code-t">VeiculoSpecifications.java</div><pre>    public static Specification&lt;Veiculo&gt; comFiltro(FiltroVeiculo f) {
+        return (root, query, cb) -&gt; {
+            List&lt;Predicate&gt; p = new ArrayList&lt;&gt;();
+            var modelo = root.join(&quot;modelo&quot;);
+            var marca = modelo.join(&quot;marca&quot;);
+
+            if (f.marcaId() != null) p.add(cb.equal(marca.get(&quot;id&quot;), f.marcaId()));
+            if (f.modeloId() != null) p.add(cb.equal(modelo.get(&quot;id&quot;), f.modeloId()));
+            if (f.tipo() != null) p.add(cb.equal(modelo.get(&quot;tipo&quot;), f.tipo()));
+            if (f.status() != null) p.add(cb.equal(root.get(&quot;status&quot;), f.status()));
+            if (f.precoMin() != null) p.add(cb.greaterThanOrEqualTo(root.get(&quot;preco&quot;), f.precoMin()));
+            if (f.precoMax() != null) p.add(cb.lessThanOrEqualTo(root.get(&quot;preco&quot;), f.precoMax()));
+            if (f.anoMin() != null) p.add(cb.greaterThanOrEqualTo(root.get(&quot;anoFabricacao&quot;), f.anoMin()));
+            if (f.anoMax() != null) p.add(cb.lessThanOrEqualTo(root.get(&quot;anoFabricacao&quot;), f.anoMax()));
+            if (f.cor() != null &amp;&amp; !f.cor().isBlank()) {
+                p.add(cb.like(cb.lower(root.get(&quot;cor&quot;)), &quot;%&quot; + f.cor().toLowerCase().trim() + &quot;%&quot;));
+            }
+            if (f.busca() != null &amp;&amp; !f.busca().isBlank()) {
+                String termo = &quot;%&quot; + f.busca().toLowerCase().trim() + &quot;%&quot;;
+                p.add(cb.or(
+                        cb.like(cb.lower(modelo.get(&quot;nome&quot;)), termo),
+                        cb.like(cb.lower(marca.get(&quot;nome&quot;)), termo),
+                        cb.like(cb.lower(root.get(&quot;placa&quot;)), termo)));
+            }
+            return cb.and(p.toArray(new Predicate[0]));
+        };
+    }
+}</pre></div>
+
+<h2>8.3 Camada de serviço</h2>
+<div class="code"><div class="code-t">VeiculoService.java (trecho)</div><pre>    @Transactional(readOnly = true)
+    public List&lt;VeiculoDTO.Response&gt; consultar(FiltroVeiculo filtro, String ordenarPor, String direcao) {
+        if (filtro.precoMin() != null &amp;&amp; filtro.precoMax() != null &amp;&amp; filtro.precoMin().compareTo(filtro.precoMax()) &gt; 0) {
+            throw new IllegalArgumentException(&quot;precoMin nao pode ser maior que precoMax&quot;);
+        }
+        if (filtro.anoMin() != null &amp;&amp; filtro.anoMax() != null &amp;&amp; filtro.anoMin() &gt; filtro.anoMax()) {
+            throw new IllegalArgumentException(&quot;anoMin nao pode ser maior que anoMax&quot;);
+        }
+        String campo = CAMPOS_ORDENACAO.contains(ordenarPor) ? ordenarPor : &quot;atualizadoEm&quot;;
+        Sort sort = &quot;asc&quot;.equalsIgnoreCase(direcao) ? Sort.by(campo).ascending() : Sort.by(campo).descending();
+        return veiculos.findAll(VeiculoSpecifications.comFiltro(filtro), sort)
+                .stream().map(VeiculoDTO.Response::de).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public VeiculoDTO.Response buscar(Long id) {
+        return VeiculoDTO.Response.de(obter(id));
+    }
+
+    @Transactional
+    public VeiculoDTO.Response cadastrar(VeiculoDTO.Request req) {
+        Modelo modelo = modeloService.obter(req.modeloId());
+        String placa = normalizarPlaca(req.placa());
+        if (placa != null &amp;&amp; veiculos.existsByPlacaIgnoreCase(placa)) {
+            throw new RegraNegocioException(&quot;Ja existe um veiculo com a placa &quot; + placa);
+        }
+        Veiculo v = new Veiculo(modelo, req.anoFabricacao(), req.cor(), req.preco(), req.quilometragem(), placa);
+        if (req.status() != null) {
+            v.setStatus(req.status());
+        }
+        return VeiculoDTO.Response.de(veiculos.save(v));
+    }
+
+    /** PUT: substitui todos os dados do veiculo. */
+    @Transactional
+    public VeiculoDTO.Response substituir(Long id, VeiculoDTO.Request req) {
+        Veiculo v = obter(id);
+        String placa = normalizarPlaca(req.placa());
+        if (placa != null &amp;&amp; !placa.equalsIgnoreCase(v.getPlaca()) &amp;&amp; veiculos.existsByPlacaIgnoreCase(placa)) {
+            throw new RegraNegocioException(&quot;Ja existe um veiculo com a placa &quot; + placa);
+        }
+        v.setModelo(modeloService.obter(req.modeloId()));
+        v.setAnoFabricacao(req.anoFabricacao());
+        v.setCor(req.cor());
+        v.setPreco(req.preco());
+        v.setQuilometragem(req.quilometragem());
+        v.setPlaca(placa);
+        if (req.status() != null) {
+            v.setStatus(req.status());
+        }
+        return VeiculoDTO.Response.de(v);
+    }
+
+    /** PATCH: atualiza apenas preco, quilometragem e/ou status. */
+    @Transactional
+    public VeiculoDTO.Response atualizarParcial(Long id, VeiculoDTO.Atualizacao req) {
+        Veiculo v = obter(id);
+        if (req.preco() == null &amp;&amp; req.quilometragem() == null &amp;&amp; req.status() == null) {
+            throw new IllegalArgumentException(&quot;Informe ao menos um campo: preco, quilometragem ou status&quot;);
+        }
+        if (req.preco() != null) v.setPreco(req.preco());
+        if (req.quilometragem() != null) v.setQuilometragem(req.quilometragem());
+        if (req.status() != null) v.setStatus(req.status());
+        return VeiculoDTO.Response.de(v);
+    }
+
+    @Transactional
+    public VeiculoDTO.Response vender(Long id) {</pre></div>
+
+<h2>8.4 Controller REST</h2>
+<div class="code"><div class="code-t">VeiculoController.java</div><pre>@RestController
+@RequestMapping(&quot;/api/veiculos&quot;)
+public class VeiculoController {
+
+    private final VeiculoService service;
+
+    public VeiculoController(VeiculoService service) {
+        this.service = service;
+    }
+
+    /**
+     * Consulta com filtros opcionais. Exemplo:
+     * GET /api/veiculos?marcaId=1&amp;status=DISPONIVEL&amp;precoMax=100000&amp;anoMin=2020&amp;ordenarPor=preco&amp;direcao=asc
+     */
+    @GetMapping
+    public List&lt;VeiculoDTO.Response&gt; consultar(
+            @RequestParam(required = false) Long marcaId,
+            @RequestParam(required = false) Long modeloId,
+            @RequestParam(required = false) TipoVeiculo tipo,
+            @RequestParam(required = false) StatusVeiculo status,
+            @RequestParam(required = false) BigDecimal precoMin,
+            @RequestParam(required = false) BigDecimal precoMax,
+            @RequestParam(required = false) Integer anoMin,
+            @RequestParam(required = false) Integer anoMax,
+            @RequestParam(required = false) String cor,
+            @RequestParam(required = false) String busca,
+            @RequestParam(defaultValue = &quot;atualizadoEm&quot;) String ordenarPor,
+            @RequestParam(defaultValue = &quot;desc&quot;) String direcao) {
+        FiltroVeiculo filtro = new FiltroVeiculo(marcaId, modeloId, tipo, status,
+                precoMin, precoMax, anoMin, anoMax, cor, busca);
+        return service.consultar(filtro, ordenarPor, direcao);
+    }
+
+    @GetMapping(&quot;/resumo&quot;)
+    public ResumoEstoque resumo() {
+        return service.resumo();
+    }
+
+    @GetMapping(&quot;/{id}&quot;)
+    public VeiculoDTO.Response buscar(@PathVariable Long id) {
+        return service.buscar(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public VeiculoDTO.Response cadastrar(@RequestBody @Valid VeiculoDTO.Request req) {
+        return service.cadastrar(req);
+    }
+
+    @PutMapping(&quot;/{id}&quot;)
+    public VeiculoDTO.Response substituir(@PathVariable Long id, @RequestBody @Valid VeiculoDTO.Request req) {
+        return service.substituir(id, req);
+    }
+
+    @PatchMapping(&quot;/{id}&quot;)
+    public VeiculoDTO.Response atualizar(@PathVariable Long id, @RequestBody @Valid VeiculoDTO.Atualizacao req) {
+        return service.atualizarParcial(id, req);
+    }
+
+    @PostMapping(&quot;/{id}/vender&quot;)
+    public VeiculoDTO.Response vender(@PathVariable Long id) {
+        return service.vender(id);
+    }
+
+    @DeleteMapping(&quot;/{id}&quot;)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long id) {
+        service.remover(id);
+    }
+}</pre></div>
+
+<h2>8.5 Tratamento de erros</h2>
+<div class="code"><div class="code-t">TratadorDeErros.java</div><pre>@RestControllerAdvice
+public class TratadorDeErros {
+
+    public record Erro(LocalDateTime timestamp, int status, String erro, List&lt;String&gt; detalhes) {
+        static Erro de(HttpStatus s, List&lt;String&gt; detalhes) {
+            return new Erro(LocalDateTime.now(), s.value(), s.getReasonPhrase(), detalhes);
+        }
+    }
+
+    @ExceptionHandler(RecursoNaoEncontradoException.class)
+    public ResponseEntity&lt;Erro&gt; naoEncontrado(RecursoNaoEncontradoException e) {
+        return resposta(HttpStatus.NOT_FOUND, List.of(e.getMessage()));
+    }
+
+    @ExceptionHandler(RegraNegocioException.class)
+    public ResponseEntity&lt;Erro&gt; conflito(RegraNegocioException e) {
+        return resposta(HttpStatus.CONFLICT, List.of(e.getMessage()));
+    }
+
+    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
+    public ResponseEntity&lt;Erro&gt; invalido(RuntimeException e) {
+        return resposta(HttpStatus.BAD_REQUEST, List.of(e.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity&lt;Erro&gt; validacao(MethodArgumentNotValidException e) {
+        List&lt;String&gt; detalhes = e.getBindingResult().getFieldErrors().stream()
+                .map(f -&gt; f.getField() + &quot;: &quot; + f.getDefaultMessage())
+                .toList();
+        return resposta(HttpStatus.BAD_REQUEST, detalhes);
+    }
+
+    @ExceptionHandler({HttpMessageNotReadableException.class, MethodArgumentTypeMismatchException.class})
+    public ResponseEntity&lt;Erro&gt; formato(Exception e) {
+        return resposta(HttpStatus.BAD_REQUEST, List.of(&quot;Requisicao em formato invalido. Verifique os campos enviados.&quot;));
+    }
+
+    private ResponseEntity&lt;Erro&gt; resposta(HttpStatus s, List&lt;String&gt; detalhes) {
+        return ResponseEntity.status(s).body(Erro.de(s, detalhes));
+    }
+}</pre></div>
+
+<h2>8.6 Modelo físico (MySQL)</h2>
+<div class="code"><div class="code-t">schema.sql</div><pre>CREATE TABLE IF NOT EXISTS marca (
+    id             BIGINT       NOT NULL AUTO_INCREMENT,
+    nome           VARCHAR(60)  NOT NULL,
+    pais_origem    VARCHAR(60)  NULL,
+    criado_em      DATETIME(6)  NOT NULL,
+    atualizado_em  DATETIME(6)  NULL,
+    CONSTRAINT pk_marca PRIMARY KEY (id),
+    CONSTRAINT uk_marca_nome UNIQUE (nome)
+) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS modelo (
+    id             BIGINT       NOT NULL AUTO_INCREMENT,
+    nome           VARCHAR(80)  NOT NULL,
+    tipo           VARCHAR(20)  NOT NULL,   -- HATCH, SEDAN, SUV, PICAPE, MOTO, UTILITARIO
+    marca_id       BIGINT       NOT NULL,
+    criado_em      DATETIME(6)  NOT NULL,
+    atualizado_em  DATETIME(6)  NULL,
+    CONSTRAINT pk_modelo PRIMARY KEY (id),
+    CONSTRAINT uk_modelo_marca UNIQUE (nome, marca_id),
+    CONSTRAINT fk_modelo_marca FOREIGN KEY (marca_id) REFERENCES marca (id)
+) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS veiculo (
+    id              BIGINT         NOT NULL AUTO_INCREMENT,
+    modelo_id       BIGINT         NOT NULL,
+    ano_fabricacao  INT            NOT NULL,
+    cor             VARCHAR(30)    NOT NULL,
+    preco           DECIMAL(12,2)  NOT NULL,
+    quilometragem   INT            NOT NULL,
+    status          VARCHAR(20)    NOT NULL,  -- DISPONIVEL, RESERVADO, VENDIDO, DESCONTINUADO
+    placa           VARCHAR(10)    NULL,
+    criado_em       DATETIME(6)    NOT NULL,
+    atualizado_em   DATETIME(6)    NULL,
+    CONSTRAINT pk_veiculo PRIMARY KEY (id),
+    CONSTRAINT uk_veiculo_placa UNIQUE (placa),
+    CONSTRAINT fk_veiculo_modelo FOREIGN KEY (modelo_id) REFERENCES modelo (id),
+    CONSTRAINT ck_veiculo_preco CHECK (preco &gt; 0),
+    CONSTRAINT ck_veiculo_km CHECK (quilometragem &gt;= 0)
+) ENGINE = InnoDB;
+
+-- Indices para acelerar os filtros mais usados (requisito de performance)
+CREATE INDEX idx_veiculo_status ON veiculo (status);
+CREATE INDEX idx_veiculo_preco  ON veiculo (preco);
+CREATE INDEX idx_veiculo_ano    ON veiculo (ano_fabricacao);</pre></div>
+
+<h2>8.7 Testes automatizados</h2>
+<p>O projeto inclui testes de integração (<code>VeiculoApiTest</code>) que sobem a aplicação com banco H2 e verificam: listagem, filtro por status e preço, ciclo completo de CRUD (criar, atualizar, vender, remover), rejeição de quilometragem menor que a atual, rejeição de dados inválidos e bloqueio da remoção de marca com modelos.</p>
+</div>
+
+<div class="sec">
+<h1>9. Parte prática: sistema em funcionamento</h1>
+<p>Os prints abaixo foram capturados com o sistema rodando localmente (<code>http://localhost:8080</code>, Java 21, perfil <code>dev</code> com banco H2 em modo de compatibilidade MySQL), seguindo um roteiro real de uso: cadastro, consulta com filtros, edição, validação, venda e remoção. Os dados de exemplo (5 marcas, 9 modelos e 10 veículos) são carregados automaticamente na primeira execução.</p>
+<div class="print"><div class="print-n">Figura 1</div><div class="print-box"><img src="prints/figura-1.png"></div><p><b>Tela inicial do sistema.</b> Página http://localhost:8080 com os indicadores do estoque (10 veículos da carga inicial) e a lista completa, com ações de editar, vender e remover.</p></div><div class="print"><div class="print-n">Figura 2</div><div class="print-box"><img src="prints/figura-7.png"></div><p><b>Cadastro de marcas e modelos.</b> Aba &quot;Marcas e Modelos&quot; após cadastrar a marca Hyundai e o modelo HB20 (HATCH) associado a ela.</p></div><div class="print"><div class="print-n">Figura 3</div><div class="print-box"><img src="prints/figura-2.png"></div><div class="print-box"><img src="prints/figura-2b.png"></div><p><b>Cadastro de veículo (CREATE).</b> Janela &quot;Novo veículo&quot; preenchida com um Hyundai HB20 2024 e, em seguida, o veículo já listado (id 11) com o total do estoque atualizado para 11.</p></div><div class="print"><div class="print-n">Figura 4</div><div class="print-box"><img src="prints/figura-3.png"></div><p><b>Consulta com filtros combinados (READ).</b> Status DISPONIVEL, preço máximo R$ 120.000 e ano mínimo 2020, ordenado por preço crescente: 5 veículos encontrados.</p></div><div class="print"><div class="print-n">Figura 5</div><div class="print-box"><img src="prints/figura-4.png"></div><p><b>Filtro por tipo.</b> Somente os veículos do tipo SUV.</p></div><div class="print"><div class="print-n">Figura 6</div><div class="print-box"><img src="prints/figura-5.png"></div><p><b>Edição de veículo (UPDATE).</b> Janela &quot;Editar veículo #11&quot; alterando o preço para R$ 82.900 e a quilometragem para 50 km.</p></div><div class="print"><div class="print-n">Figura 7</div><div class="print-box"><img src="prints/figura-9.png"></div><p><b>Validação de regra de negócio.</b> Tentativa de reduzir a quilometragem do Corolla de 18.500 km para 10 km: a API recusa (HTTP 400) e a mensagem aparece no formulário.</p></div><div class="print"><div class="print-n">Figura 8</div><div class="print-box"><img src="prints/figura-6.png"></div><p><b>Venda e remoção (DELETE).</b> O Polo foi marcado como VENDIDO e o HB20 foi removido (mensagem &quot;Veículo removido&quot;); os indicadores foram recalculados.</p></div><div class="print"><div class="print-n">Figura 9</div><div class="print-box"><img src="prints/figura-8.png"></div><p><b>API REST respondendo em JSON.</b> Resposta de GET /api/veiculos?status=DISPONIVEL&amp;precoMax=120000&amp;ordenarPor=preco&amp;direcao=asc aberta no navegador.</p></div><div class="print"><div class="print-n">Figura 10</div><div class="print-box"><img src="prints/figura-10.png"></div><p><b>Testes automatizados.</b> Saída do comando mvn test: 6 testes de integração executados, sem falhas (BUILD SUCCESS).</p></div>
+</div>
+
+<div class="sec">
+<h1>10. Como executar e repositório</h1>
+<h2>10.1 Pré-requisitos</h2>
+<ul><li>Java 17 ou superior</li><li>Maven 3.9+ (ou uma IDE como IntelliJ IDEA / VS Code com suporte a Java)</li><li>MySQL 8 (opcional se usar o perfil <code>dev</code>)</li></ul>
+<h2>10.2 Execução com MySQL</h2>
+<ol>
+<li>Ajuste usuário e senha do banco em <code>src/main/resources/application.properties</code>.</li>
+<li>Opcionalmente, execute <code>database/schema.sql</code> no MySQL Workbench.</li>
+<li>Na pasta do projeto, rode <code>mvn spring-boot:run</code>.</li>
+<li>Acesse <code>http://localhost:8080</code>.</li>
+</ol>
+<h2>10.3 Execução sem MySQL</h2>
+<p>Rode <code>mvn spring-boot:run -Dspring-boot.run.profiles=dev</code>. O sistema usa o banco H2 em memória com os mesmos dados de exemplo.</p>
+<h2>10.4 Repositório</h2>
+<div class="box">Código-fonte completo: <b>https://github.com/Kayke-ns/estoque-veiculos</b><br>Vídeo pitch: <b>LINK DO YOUTUBE (NÃO LISTADO)</b></div>
+</div>
+
+<div class="sec">
+<h1>11. Considerações finais</h1>
+<p>O sistema desenvolvido atende aos cinco requisitos funcionais propostos (cadastro de veículos, cadastro de marcas e modelos, consulta com filtros, atualização e remoção) e acrescenta registro de venda, indicadores de estoque e validações de negócio que protegem a qualidade dos dados. Os requisitos não funcionais de usabilidade e performance foram tratados com uma interface direta e com filtros executados no banco, apoiados por índices.</p>
+<p>Do ponto de vista acadêmico, o projeto mostrou como os conceitos de POO deixam o código mais seguro e fácil de manter: o encapsulamento garante que um veículo nunca fique em estado inválido, a herança elimina repetição entre as entidades, a abstração define um contrato comum e o polimorfismo permite tratar objetos diferentes de forma uniforme. A separação em camadas facilita evoluções futuras, como autenticação de usuários, upload de fotos dos veículos, relatórios de vendas por período e integração com portais de anúncio.</p>
+
+<h1 style="margin-top:28px">12. Referências</h1>
+<ul>
+<li>TURINI, Rodrigo. <i>Desbravando Java e Orientação a Objetos: um guia para o iniciante da linguagem</i>. São Paulo: Casa do Código.</li>
+<li>DEITEL, Paul; DEITEL, Harvey. <i>Java: como programar</i>. São Paulo: Pearson.</li>
+<li>SPRING. <i>Spring Boot Reference Documentation</i>. Disponível em: https://docs.spring.io/spring-boot/.</li>
+<li>SPRING. <i>Spring Data JPA Reference Documentation</i>. Disponível em: https://docs.spring.io/spring-data/jpa/reference/.</li>
+<li>ORACLE. <i>MySQL 8.0 Reference Manual</i>. Disponível em: https://dev.mysql.com/doc/refman/8.0/en/.</li>
+</ul>
+</div>
+</body></html>

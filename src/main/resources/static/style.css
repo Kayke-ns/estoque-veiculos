@@ -1,0 +1,72 @@
+:root {
+  --fundo: #f4f6f9;
+  --painel: #ffffff;
+  --texto: #1d2433;
+  --suave: #5b667a;
+  --borda: #dde2ea;
+  --primaria: #0b5cad;
+  --primaria-hover: #094a8c;
+  --perigo: #c0392b;
+  --raio: 10px;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; background: var(--fundo); color: var(--texto); font-size: 14px; }
+.topo { background: #0f2747; color: #fff; padding: 18px 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.topo h1 { margin: 0; font-size: 22px; }
+.topo p { margin: 2px 0 0; opacity: .7; font-size: 13px; }
+.aba { background: transparent; color: #cfd8e6; border: 1px solid #2c4870; padding: 8px 14px; border-radius: 6px; cursor: pointer; }
+.aba.ativa { background: #fff; color: #0f2747; border-color: #fff; }
+main { max-width: 1240px; margin: 0 auto; padding: 24px 16px 48px; }
+.painel { background: var(--painel); border: 1px solid var(--borda); border-radius: var(--raio); padding: 16px; }
+h2 { margin: 0 0 12px; font-size: 16px; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.card { background: var(--painel); border: 1px solid var(--borda); border-radius: var(--raio); padding: 14px 16px; }
+.card span { color: var(--suave); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+.card strong { display: block; font-size: 22px; margin-top: 4px; }
+
+.filtros { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; align-items: end; }
+label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--suave); }
+input, select { font: inherit; padding: 7px 9px; border: 1px solid var(--borda); border-radius: 6px; background: #fff; color: var(--texto); }
+.acoes-filtro { display: flex; gap: 8px; }
+button { font: inherit; padding: 8px 14px; border-radius: 6px; border: 1px solid var(--borda); background: #fff; cursor: pointer; }
+button.primario { background: var(--primaria); color: #fff; border-color: var(--primaria); }
+button.primario:hover { background: var(--primaria-hover); }
+button.perigo { color: var(--perigo); border-color: #f0c8c3; }
+button.mini { padding: 4px 9px; font-size: 12px; }
+
+.barra { display: flex; justify-content: space-between; align-items: center; margin: 16px 0 10px; }
+#contador { color: var(--suave); }
+.tabela-wrap { padding: 0; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--borda); white-space: nowrap; }
+th { background: #f8fafc; font-size: 12px; color: var(--suave); font-weight: 600; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr:last-child td { border-bottom: 0; }
+td small { color: var(--suave); }
+.acoes { display: flex; gap: 6px; justify-content: flex-end; }
+
+.status { padding: 3px 8px; border-radius: 99px; font-size: 11px; font-weight: 600; }
+.s-DISPONIVEL { background: #e3f4ea; color: #1d7a45; }
+.s-RESERVADO { background: #fff3d6; color: #8a6200; }
+.s-VENDIDO { background: #e6ecf5; color: #36507a; }
+.s-DESCONTINUADO { background: #f6e3e1; color: #a03224; }
+
+.duas-colunas { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 800px) { .duas-colunas { grid-template-columns: 1fr; } }
+.inline { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.inline input, .inline select { flex: 1; min-width: 110px; }
+.lista { list-style: none; margin: 0; padding: 0; }
+.lista li { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--borda); }
+.lista li small { color: var(--suave); }
+
+dialog { border: 0; border-radius: var(--raio); padding: 22px; width: min(560px, 94vw); box-shadow: 0 20px 50px rgba(0,0,0,.25); }
+dialog::backdrop { background: rgba(15, 39, 71, .45); }
+.grade { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.rodape-modal { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+.erro { color: var(--perigo); min-height: 18px; margin: 10px 0 0; }
+
+#toast { position: fixed; bottom: 20px; right: 20px; background: #0f2747; color: #fff; padding: 12px 18px; border-radius: 8px; opacity: 0; transform: translateY(10px); transition: .25s; pointer-events: none; }
+#toast.on { opacity: 1; transform: none; }
+#toast.falha { background: var(--perigo); }
+.vazio { text-align: center; color: var(--suave); padding: 30px; }

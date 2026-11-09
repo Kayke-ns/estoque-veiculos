@@ -1,0 +1,62 @@
+### Requisicoes de exemplo (VS Code "REST Client" ou IntelliJ HTTP Client)
+@base = http://localhost:8080/api
+
+### Listar marcas
+GET {{base}}/marcas
+
+### Cadastrar marca
+POST {{base}}/marcas
+Content-Type: application/json
+
+{ "nome": "Hyundai", "paisOrigem": "Coreia do Sul" }
+
+### Cadastrar modelo (use o id da marca criada)
+POST {{base}}/modelos
+Content-Type: application/json
+
+{ "nome": "HB20", "tipo": "HATCH", "marcaId": 6 }
+
+### Cadastrar veiculo (CREATE)
+POST {{base}}/veiculos
+Content-Type: application/json
+
+{ "modeloId": 10, "anoFabricacao": 2024, "cor": "Azul", "preco": 84900, "quilometragem": 0, "placa": "HBV2A24" }
+
+### Listar todos (READ)
+GET {{base}}/veiculos
+
+### Filtro: disponiveis ate R$ 120 mil, de 2020 em diante, mais baratos primeiro
+GET {{base}}/veiculos?status=DISPONIVEL&precoMax=120000&anoMin=2020&ordenarPor=preco&direcao=asc
+
+### Filtro: SUVs
+GET {{base}}/veiculos?tipo=SUV
+
+### Filtro: por marca (Toyota = 1)
+GET {{base}}/veiculos?marcaId=1
+
+### Busca livre
+GET {{base}}/veiculos?busca=corolla
+
+### Resumo do estoque
+GET {{base}}/veiculos/resumo
+
+### Atualizar preco e quilometragem (UPDATE parcial)
+PATCH {{base}}/veiculos/1
+Content-Type: application/json
+
+{ "preco": 145900, "quilometragem": 19000 }
+
+### Marcar como vendido
+POST {{base}}/veiculos/1/vender
+
+### Erro de validacao (quilometragem menor que a atual)
+PATCH {{base}}/veiculos/2
+Content-Type: application/json
+
+{ "quilometragem": 10 }
+
+### Remover veiculo (DELETE)
+DELETE {{base}}/veiculos/11
+
+### Tentar remover marca com modelos (409)
+DELETE {{base}}/marcas/1
